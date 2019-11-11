@@ -15,7 +15,8 @@ class App extends Component {
     users: [],
     user: {},
     loading: false,
-    alert: null
+    alert: null,
+    repos: []
   };
 
   //Get single github user
@@ -23,6 +24,15 @@ class App extends Component {
     this.setState({ loading: true });
     const res = await axios.get(`https://api.github.com/users/${username}`);
     this.setState({ user: res.data, loading: false });
+  };
+
+  //get user repos
+  getUserRepos = async username => {
+    this.setState({ loading: true });
+    const res = await axios.get(
+      `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`
+    );
+    this.setState({ repos: res.data, loading: false });
   };
 
   //Searching github users
@@ -80,7 +90,9 @@ class App extends Component {
                   <User
                     {...props}
                     getUser={this.getUser}
+                    getUserRepos={this.getUserRepos}
                     user={this.state.user}
+                    repos={this.state.repos}
                     loading={this.state.loading}
                   />
                 )}
